@@ -15,6 +15,8 @@ if __name__ == '__main__':
                 result = s.listen()
                 print("返回的消息为:")
                 pprint(result)
+                if result:
+                    s.filter(result)
         except Exception as E:
             raise
         #             try:

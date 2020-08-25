@@ -560,7 +560,7 @@ class Interactive:
             receive_dict = json.loads(parse.unquote(url_code))
         except Exception as E:
             print('LISTEN-###json.loads###出问题了\n\t', E)
-            print('###url_code###', url_code)
+            print('###url_code###\n', url_code)
             print('##parse.unquote(url_code)##:\n', parse.unquote(url_code))
 
             receive_dict = None
@@ -568,6 +568,7 @@ class Interactive:
             return receive_dict
         else:
             print("对方已离线。。")
+
 
     def run(self):
         print('###进入交互发送模式,Ctrl+C退出:')
@@ -596,29 +597,27 @@ class Interactive:
 
 
     def filter(self, dict):
-        keys = dict.keys()
+        # keys = dict.keys()
         print('')
-        try:
+        type = dict.get('type')
+        if type == 3:
+            print('事件')
+            pprint(dict)
             print(f"群:{dict['fromGroupName']}({dict['fromGroup']})中 {dict['fromQQName']}({dict['fromQQ']}"
                   f"triggerQQ{dict['triggerQQ']} triggerQQName:{dict['triggerQQName']}|"
                   f"type:{dict['type']}-msgType:{dict['msgType']}-msgType2:{dict['msgType']}")
-        except:
-            try:
-                if 'fromQQ' in keys:  # TODO: 这里改成特定条件触发回复
-                    if result['type'] == 1:  # 如果type 为1 进行私发回复
-                        print(f"来自{result['fromQQ']:>12}的1私聊：{result['msg']:<30}")
-                        new_msg = f"爸爸，我收到了一条私聊消息: \n有个傻子*{result['fromQQ']}*说：{result['msg']}"
-                        # s.private_msg(new_msg, result['fromQQ'])
-                    elif result['type'] == 2:  # 如果type 为2 进行群聊回复
-                        print(f"来自:{result['fromQQ']:>12}的2群聊 群昵称：{result['fromQQCardName']:>12} |：{result['msg']:<30}")
-                        new_msg = f"爸爸，我收到了一条群聊消息: \n有个傻子*{result['fromQQCardName']}*说：{result['msg'][:60]}"
-                        # s.group_msg(new_msg, result['fromGroup'])
-                else:
-                    print('无from字段')
+        elif type == 2:
+            print('群聊')
+            print(f"来自:{dict['fromQQ']:>12}的2群聊 群昵称：{dict['fromQQCardName']:>12} |：{dict['msg']:<30}")
+            new_msg = f"爸爸，我收到了一条群聊消息: \n有个傻子*{dict['fromQQCardName']}*说：{dict['msg'][:60]}"
+            # s.group_msg(new_msg, result['fromGroup'])
+        elif type == 1:
+            print('私聊')
+            print(f"来自{dict['fromQQ']:>12}的1私聊：{dict['msg']:<30}")
+            new_msg = f"爸爸，我收到了一条私聊消息: \n有个傻子*{dict['fromQQ']}*说：{dict['msg']}"
+            # s.private_msg(new_msg, result['fromQQ'])
 
-            except:
-                print('不符合过滤规则 详见s.filter')
-                pass
+
 
 
 from pprint import pprint
