@@ -27,16 +27,16 @@ from QQ_msg_with_Python_TCP.client_sender import Interactive
 #     return inner
 
 def insert():
-
-    for i in range(1,6):
-        print(f'|操作中:{"##" * i:14}| 队列剩余:{len(queue_lst):<2} 回车可接受消息')
-        time.sleep(0.8)
+    for i in range(1, 6):
+        notice = "..." * i
+        if i == 5:
+            notice = '!!!' * i
+        print(f'\r|操作中:{notice:15}| 队列剩余:{len(queue_lst):<2} 回车可接受消息\r')
+        time.sleep(0.3)
 
 class Interact:
     def listen(self):
         global queue_lst
-        # for i in range(10):
-        #     strs = 'listen' + '#' * (10 - i) + 'Enter>\n'
         while True:
             strs = '监听中:' + '#' * 3 + '回车模拟发送消息>\n'
             input(strs)
@@ -45,8 +45,6 @@ class Interact:
             queue_lst.append(t)
             print('已添加到消息处理队列-->共:', len(queue_lst))
             print('\n')
-            # t.start()
-            # t.join()
 
 queue_lst = []
 def queue():
@@ -63,7 +61,6 @@ def queue():
 
 if __name__ == '__main__':
     s = Interact()
-
     threads = []
     t2 = threading.Thread(target=s.listen)
     threads.append(t2)
