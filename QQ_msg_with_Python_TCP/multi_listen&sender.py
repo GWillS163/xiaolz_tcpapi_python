@@ -17,7 +17,7 @@ class Interact:
     def listen(self):
         global queue_lst
         while True:
-            # print('!', end='')
+            # print('!', end=dddsfsdfds'')
             # time.sleep(1)
             strs = '监听中:' + '#' * 3 + '回车创建后台任务>'
             result = input(strs)
