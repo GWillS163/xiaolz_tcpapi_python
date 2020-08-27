@@ -1,7 +1,9 @@
 import threading
 import time
+from pymongo import *
 from QQ_msg_with_Python_TCP.client_sender import Interactive
-from gwills_tools.scrab_img_at_cl import get_web_link,find_url
+from gwills_tools.scrab_img_at_cl import get_web_link, find_url
+from gwills_tools.insert_my_mongodb import insert_to_database
 from pprint import pprint
 # 2020年8月27日, 13点26分
 # 本代码 已经修改- 主要有两个线程,一个监听listen,另一个后台不断检测并执行任务队列,
@@ -42,16 +44,37 @@ def queue():   # 后台消息处理队列  不断检测输入内容, 并执行�
             if 'msg' in all_key and 'fromQQ' in all_key:
                 find_url_res = find_url(queue_arg['msg'])
                 print('里面找到的链接:')
-                for finded_url in find_url_res:
+                for finded_url in find_url_res:  # 如果有的话
                     url, title, output_lst, un_output_ls = get_web_link(finded_url)
                     send_msg = url + '\n' + title
                     send_to = queue_arg['fromQQ']
-                    time.sleep(2)
+
+                    # 入数据库部分
+                    data = {'title': title,
+                            'url': url,
+                            'output_lst': output_lst,
+                            'un_output_lst': un_output_ls,
+                            'fromQQ': send_to,
+                            }
+                    try:
+                        mongo_insert(data)
+                        s.private_msg('入库over', send_to)
+                    except Exception as E:
+                        print(E)
+                        s.private_msg(E, send_to)
+                        pass
+
                     s.private_msg(send_msg, send_to)
                     for url in output_lst:
                         time.sleep(2)
                         s.private_msg(url, send_to)
             print('本条数据处理完毕')
+
+
+def mongo_insert(data):
+    data.update({'create_time': time.strftime("%Y-%m-%d %H:%m", time.localtime())})
+    db_QQbot.insert(data)
+
 def insert(te):
     for i in range(1, 6):
         notice = "..." * i
@@ -64,6 +87,11 @@ def insert(te):
         time.sleep(0.9)
 
 def multi_process():
+    global db_QQbot
+    client = MongoClient('mongodb+srv://admin:-----@qyt-cluster.catxh.azure.mongodb.net/QYT-cluster')
+    db = client['private_spider_data']
+    db_QQbot = db['QQ_bot']
+
     while True:
         global s, threads, queue_lst
         threads = []
