@@ -15,8 +15,10 @@ if __name__ == '__main__':
                 result = s.listen()
                 print("返回的消息为:")
                 pprint(result)
+                # print('-'*10)
                 if result:
                     s.filter(result)
+                print('='*20)
         except Exception as E:
             raise
         #             try:

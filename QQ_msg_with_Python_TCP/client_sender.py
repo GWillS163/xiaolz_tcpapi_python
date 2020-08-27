@@ -554,12 +554,12 @@ class Interactive:
     #     """
 
     def listen(self):
-        recv_data = self.conn.recv(1024)  # 此处与udp不同，客户端已经知道消息来自哪台服务器，不需要用recvfrom了
+        recv_data = self.conn.recv(10240)  # 此处与udp不同，客户端已经知道消息来自哪台服务器，不需要用recvfrom了
         try:
             url_code = recv_data.decode()  # decode GBK
             receive_dict = json.loads(parse.unquote(url_code))
         except Exception as E:
-            print('LISTEN-###json.loads###出问题了\n\t', E)
+            print('\n\nLISTEN-###json.loads###出问题了\n\t', E)
             print('###url_code###\n', url_code)
             print('##parse.unquote(url_code)##:\n', parse.unquote(url_code))
 
@@ -599,21 +599,25 @@ class Interactive:
     def filter(self, dict):
         # keys = dict.keys()
         print('')
-        type = dict.get('type')
-        if type == 3:
-            print('事件')
-            pprint(dict)
-            print(f"群:{dict['fromGroupName']}({dict['fromGroup']})中 {dict['fromQQName']}({dict['fromQQ']}"
-                  f"triggerQQ{dict['triggerQQ']} triggerQQName:{dict['triggerQQName']}|"
-                  f"type:{dict['type']}-msgType:{dict['msgType']}-msgType2:{dict['msgType']}")
-        elif type == 2:
-            print('群聊')
-            print(f"来自:{dict['fromQQ']:>12}的2群聊 群昵称：{dict['fromQQCardName']:>12} |：{dict['msg']:<30}")
+        dict_type = dict.get('type')
+        if dict_type == 3:
+            print('事件###', end='')  # TODO: 入群提醒在这里
+            """TCP交互测试私群(1106878273)  中 駿清清(1274667113)
+triggerQQ:3520970136  triggerQQName:A南京乾颐堂-心静|
+type:3 msgType:25 msgType2:25"""
+            print(f"群:  {dict['fromGroupName']}({dict['fromGroup']})  中 {dict['fromQQName']}({dict['fromQQ']})\n"
+                  f"目标QQ/triggerQQ:{dict['triggerQQ']} | 目标QQ昵称/triggerQQName:{dict['triggerQQName']}\n"
+                  f"type:{dict['type']} \n"
+                  f"msgType:{dict['msgType']} msgType2:{dict['msgType2']}")
+        elif dict_type == 2:
+            print('群聊###', end='')
+            print(f"来自:{dict['fromQQ']:>12} 群昵称：{dict['fromQQCardName']:>12} |：{dict['msg']:<30}")
             new_msg = f"爸爸，我收到了一条群聊消息: \n有个傻子*{dict['fromQQCardName']}*说：{dict['msg'][:60]}"
             # s.group_msg(new_msg, result['fromGroup'])
-        elif type == 1:
-            print('私聊')
-            print(f"来自{dict['fromQQ']:>12}的1私聊：{dict['msg']:<30}")
+        elif dict_type == 1:
+            # TODO: 如果不是好友私聊的话需要再次判断
+            print('私聊###', end='')
+            print(f"来自{dict['fromQQ']:>12}：{dict['msg']:<30}")
             new_msg = f"爸爸，我收到了一条私聊消息: \n有个傻子*{dict['fromQQ']}*说：{dict['msg']}"
             # s.private_msg(new_msg, result['fromQQ'])
 

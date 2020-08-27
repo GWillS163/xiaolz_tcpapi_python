@@ -25,6 +25,7 @@ class Listener:
         url_code = recv_data.decode('gbk')  # decode GBK
         receive_dict = eval(parse.unquote(url_code))
         if recv_data:
+
             print("返回的消息为:")
             pprint(receive_dict)  # quote2 url_code
             print('=' * 80)
