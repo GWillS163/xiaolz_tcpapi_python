@@ -91,7 +91,7 @@ def insert(te):
 
 def multi_process():
     global db_QQbot
-    client = MongoClient('mongodb+srv://admin:----@qyt-cluster.catxh.azure.mongodb.net/QYT-cluster')
+    client = MongoClient('mongodb+srv://admin:---@qyt-cluster.catxh.azure.mongodb.net/QYT-cluster')
     db = client['private_spider_data']
     db_QQbot = db['QQ_bot']
 
