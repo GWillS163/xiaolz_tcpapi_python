@@ -34,6 +34,8 @@ def block_listen():  # 前台不断接收 值,返回给列表,后不间断监听
         if result:
             queue_lst = [result] + queue_lst
             print('已添加到消息处理队列-->共:', len(queue_lst))
+            if 'fromQQ' in result.keys():
+                s.private_msg('爸爸你交给我的事情我记下了,还有'+str(len(queue_lst))+'个没给您发完', result['fromQQ'])
 
 def queue():   # 后台消息处理队列  不断检测输入内容, 并执行相应程序
     while 1:
@@ -52,15 +54,16 @@ def queue():   # 后台消息处理队列  不断检测输入内容, 并执行�
                     # 入数据库部分
                     data = {'title': title,
                             'url': url,
-                            'output_lst': output_lst,
+                            'output_lst':output_lst,
                             'un_output_lst': un_output_ls,
                             'fromQQ': send_to,
                             }
+                    # pprint(data)
                     try:
                         mongo_insert(data)
                         s.private_msg('入库over', send_to)
                     except Exception as E:
-                        print(E)
+                        print('入库出现问题', E)
                         s.private_msg(E, send_to)
                         pass
 
@@ -88,7 +91,7 @@ def insert(te):
 
 def multi_process():
     global db_QQbot
-    client = MongoClient('mongodb+srv://admin:-----@qyt-cluster.catxh.azure.mongodb.net/QYT-cluster')
+    client = MongoClient('mongodb+srv://admin:----@qyt-cluster.catxh.azure.mongodb.net/QYT-cluster')
     db = client['private_spider_data']
     db_QQbot = db['QQ_bot']
 
