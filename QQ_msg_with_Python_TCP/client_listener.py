@@ -32,7 +32,7 @@ class Listener:
             return receive_dict
         else:
             print("对方已离线...")
-
+ 
     def close(self):
         self.conn.close()
 
