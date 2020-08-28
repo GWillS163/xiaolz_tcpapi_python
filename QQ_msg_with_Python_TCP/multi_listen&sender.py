@@ -28,8 +28,9 @@ def block_listen():  # 前台不断接收 值,返回给列表,后不间断监听
                 s.private_msg('爸爸你交给我的事情我记下了,还有'+str(q.qsize())+'个没给您发完', result['fromQQ'])
 
 my_qq = 2934289319
+# 这里是检测是否与机器人相关, 未完成
 def detect_about_me(result):
-    if 'fromQQ' in result.keys():  # TODO: 这里改成特定条件触发回复
+    if 'fromQQ' in result.keys():
         res_type = result.get('res_type')
         res_msg = result.get('msg')
         if res_type == 1:  # 如果type 为1 进行私发回复
@@ -51,7 +52,8 @@ def back_queue():   # 后台消息处理队列  不断检测输入内容, 并执
     while 1:
         queue_arg = q.get()
         if queue_arg:
-
+            # 检测是否与bot 相关的消息
+            # if detect_about_me(queue_arg):
             for i in range(1, 6):
                 notice = "..." * i
                 states = "操作中: "
@@ -91,6 +93,7 @@ def multi_process():
         print('='*20)
 
 if __name__ == '__main__':
+    # 多线程监听程序, multi_process 调度内调度前台和后台程序.
     multi_process()
 
 

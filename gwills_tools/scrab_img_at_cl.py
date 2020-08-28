@@ -14,7 +14,9 @@ def get_web_link(url, encode='utf-8',):
     body = res.text
     # body = re.findall(r'<div id="main">[\s\S]*</div>', res.text)[0]
     # pprint(body)
-    title = re.findall(r"<title>([\s\S]*)</title>", body)[0]
+    title = re.findall(r"<title>([\s\S]*)</title>", body)
+    # if title:
+    title = title[0] if title else '未知标题'
     all_link = re.findall(
         r"((?:http|ftp|https):\/\/[\w\-_]+(?:\.[\w\-_]+)+(?:[\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?)", body)
 
@@ -34,8 +36,8 @@ def get_web_link(url, encode='utf-8',):
             # 添加不符合规则的链接
             un_output_lst.append(img)
 
-    output_lst = set(output_lst)
-    un_output_lst = set(un_output_lst)
+    output_lst = list(set(output_lst))
+    un_output_lst = list(set(un_output_lst))
     print('func####解析完毕')
     return (url, title, output_lst, un_output_lst)
 
@@ -64,7 +66,7 @@ def write_to_txt(url, title, output_lst, un_output_lst):
         f.write('\n' * 2)
         print('####文件写入完毕')
 
-
+# 给http://xxx.xxx.com/xxx/#IUhufhd.jpg 的链接和本地路径将下载
 def down_file(url, filepath):
     r = requests.get(url)
     file_name = filepath + url.split('/')[-1]

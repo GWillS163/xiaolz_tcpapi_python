@@ -2,29 +2,10 @@ import threading
 import time
 from QQ_msg_with_Python_TCP.client_sender import Interactive
 # 2020年8月26日,21点54分,
-# 本代码仅仅是本地测试 未正式接入到 listener,
+# 本代码仅仅是本地测试 测试多线程,  监听消息并放到任务队列,后台进行处理,
 # 你可以自己修改.
 # 本仓库主要用来备份自己的代码, 非必要不会做过多的 封装.
 
-
-
-
-# def multi(func):
-#     print('='*20)
-#
-#     def inner(lst=''):
-#         for i in range(2):
-#             print(i)
-#             t = threading.Thread(target=func, args=lst)
-#             threads.append(t)
-#             t.start()
-#         for t in threads:
-#             t.join()
-#
-#         return
-#
-#     print('='*20)
-#     return inner
 
 def insert():
     for i in range(1, 6):

@@ -3,6 +3,7 @@ from client_sender import Interactive
 from pprint import pprint
 
 if __name__ == '__main__':
+    # 文件名为 不推荐的 listen 然后阻塞进程 去发送消息
     while True:
         try:
             print('尝试建立连接')

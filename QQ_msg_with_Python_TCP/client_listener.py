@@ -38,8 +38,8 @@ class Listener:
 
 
 if __name__ == '__main__':
-    l = Listener('172.16.66.170', 8404, 2154024779)
-    # print(l)
+    # 本代码仅用来监听,可单独运行
+    l = Listener('172.16.66.170', 8404, 2154024779) # 键入 初始配置: IP/ 端口/自己的QQ
     while True:
         l.listen()
 

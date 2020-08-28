@@ -48,7 +48,7 @@ class Interactive:
                 "req": 0}
         self.conn.send(str(data).encode('gbk'))
 
-    def send_group_temporary_msg(self, msg, fromgroup, fromQQ,i):
+    def send_group_temporary_msg(self, msg, fromgroup, fromQQ):
         """
         /**
          * 发送群临时消息
@@ -554,7 +554,7 @@ class Interactive:
     #     """
 
     def listen(self):
-        recv_data = self.conn.recv(10240)  # 此处与udp不同，客户端已经知道消息来自哪台服务器，不需要用recvfrom了
+        recv_data = self.conn.recv(4096)  # 此处与udp不同，客户端已经知道消息来自哪台服务器，不需要用recvfrom了
         try:
             url_code = recv_data.decode()  # decode GBK
             receive_dict = json.loads(parse.unquote(url_code))
@@ -622,22 +622,11 @@ type:3 msgType:25 msgType2:25"""
             # s.private_msg(new_msg, result['fromQQ'])
 
 
-
-
 from pprint import pprint
 if __name__ == '__main__':
-    s = Interactive("172.16.66.170", 8404, 2154024779)
-    s.crte_conn()
-    # while True:
-    #     try:
-    #         result = s.listen()
-    #         pprint(result)
-    #         print('-'*40)
-    #         s.filter(result)
-    #         print('='*40)
-    #     except Exception as E:
-    #         s.close()
-    #         raise
+    # 本代码可以用来单独发送
+    # 以下为示例代码 (作者自己用,可参考用法)
+    s = Interactive("172.16.66.170", 8404, 2154024779)    # 键入 初始配置: IP/ 端口/自己的QQ
     # s.run()
     # s.private_msg('To 127', 1274667113)
     # s.json_msg("233", 1274667113)
@@ -651,12 +640,6 @@ if __name__ == '__main__':
     # s.group_msg('[@605658506] 我可以发消息找你玩儿', 1050382999)
     # time.sleep(2)
     # s.group_msg('我现在可以重置了哦，重置功能已更新，私聊我即可重置', 470385171)
-    # time.sleep(2)
-    # s.group_msg('我现在可以重置了哦，重置功能已更新，私聊我即可重置', 931250969)
-    # time.sleep(2)
-    # s.group_msg('我现在可以重置了哦，重置功能已更新，私聊我即可重置', 1102236132)
-    # time.sleep(2)
-    # s.group_msg('我现在可以重置了哦，重置功能已更新，私聊我即可重置', 300509597)
     # time.sleep(2)
     s.close()
 
